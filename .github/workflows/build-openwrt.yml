@@ -100,9 +100,9 @@ jobs:
         run: |
           git clone --depth=1 --single-branch https://github.com/coolsnowwolf/lede $DOWNLOAD_ROOT_PATH/patch/lede
           git clone --depth=1 --single-branch https://github.com/immortalwrt/packages $DOWNLOAD_ROOT_PATH/patch/immortalwrt-packages
-          git clone --depth=1 --single-branch https://github.com/chenmozhijin/turboacc -b package $DOWNLOAD_ROOT_PATH/patch/packages
-          git clone --depth=1 --single-branch https://github.com/kenzok8/openwrt-packages.git -b package $DOWNLOAD_ROOT_PATH/patch/turboacc
-          git clone --depth=1 --single-branch https://github.com/1wrt/luci-app-ikoolproxy.git -b package $DOWNLOAD_ROOT_PATH/patch/ikoolproxy
+          git clone --depth=1 --single-branch https://github.com/chenmozhijin/turboacc -b package $DOWNLOAD_ROOT_PATH/patch/turboacc
+          git clone --depth=1 --single-branch https://github.com/kenzok8/openwrt-packages $DOWNLOAD_ROOT_PATH/patch/packages
+          git clone --depth=1 --single-branch https://github.com/1wrt/luci-app-ikoolproxy $DOWNLOAD_ROOT_PATH/patch/ikoolproxy
           git clone https://git.openwrt.org/openwrt/openwrt.git $DOWNLOAD_ROOT_PATH/openwrt
 
       - name: 导入拓展软件包
