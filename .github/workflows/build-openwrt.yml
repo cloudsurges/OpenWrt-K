@@ -85,13 +85,13 @@ jobs:
 
       - name: 建立工作文件夹
         run: |
-          #mkdir -p download cmzj_package cmzj_patch
+    #      mkdir -p download cmzj_package cmzj_patch
           mkdir -p download cmzj_patch
           export DOWNLOAD_ROOT_PATH="$(pwd)/download"
-          #export CMZJ_PACKAGE_ROOT_PATH="$(pwd)/cmzj_package"
+    #      export CMZJ_PACKAGE_ROOT_PATH="$(pwd)/cmzj_package"
           export CMZJ_PATCH_ROOT_PATH="$(pwd)/cmzj_patch"
           echo "DOWNLOAD_ROOT_PATH=$DOWNLOAD_ROOT_PATH" >> $GITHUB_ENV
-          #echo "CMZJ_PACKAGE_ROOT_PATH=$CMZJ_PACKAGE_ROOT_PATH" >> $GITHUB_ENV
+    #      echo "CMZJ_PACKAGE_ROOT_PATH=$CMZJ_PACKAGE_ROOT_PATH" >> $GITHUB_ENV
           echo "CMZJ_PATCH_ROOT_PATH=$CMZJ_PATCH_ROOT_PATH" >> $GITHUB_ENV
           mkdir -p $CMZJ_PATCH_ROOT_PATH/{firewall4,libnftnl,nftables}/patches/
           mkdir -p $CMZJ_PATCH_ROOT_PATH/{dnsmasq,libubox,netdata}
