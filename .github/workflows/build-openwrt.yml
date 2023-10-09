@@ -85,12 +85,13 @@ jobs:
 
       - name: 建立工作文件夹
         run: |
-          mkdir -p download cmzj_package cmzj_patch
+          #mkdir -p download cmzj_package cmzj_patch
+          mkdir -p download cmzj_patch
           export DOWNLOAD_ROOT_PATH="$(pwd)/download"
-          export CMZJ_PACKAGE_ROOT_PATH="$(pwd)/cmzj_package"
+          #export CMZJ_PACKAGE_ROOT_PATH="$(pwd)/cmzj_package"
           export CMZJ_PATCH_ROOT_PATH="$(pwd)/cmzj_patch"
           echo "DOWNLOAD_ROOT_PATH=$DOWNLOAD_ROOT_PATH" >> $GITHUB_ENV
-          echo "CMZJ_PACKAGE_ROOT_PATH=$CMZJ_PACKAGE_ROOT_PATH" >> $GITHUB_ENV
+          #echo "CMZJ_PACKAGE_ROOT_PATH=$CMZJ_PACKAGE_ROOT_PATH" >> $GITHUB_ENV
           echo "CMZJ_PATCH_ROOT_PATH=$CMZJ_PATCH_ROOT_PATH" >> $GITHUB_ENV
           mkdir -p $CMZJ_PATCH_ROOT_PATH/{firewall4,libnftnl,nftables}/patches/
           mkdir -p $CMZJ_PATCH_ROOT_PATH/{dnsmasq,libubox,netdata}
@@ -168,36 +169,36 @@ jobs:
       #    echo "CMZJ_PACKAGE_ROOT_PATH"
       #    ls -la $(find $CMZJ_PACKAGE_ROOT_PATH -type d)
 
-      - name: 修改Makefile文件
-        working-directory:  ${{ env.CMZJ_PACKAGE_ROOT_PATH }}
-        run: sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' $(find ./ -type f -name "Makefile")
+     # - name: 修改Makefile文件
+     #   working-directory:  ${{ env.CMZJ_PACKAGE_ROOT_PATH }}
+     #   run: sed -i 's/include ..\/..\/luci.mk/include $(TOPDIR)\/feeds\/luci\/luci.mk/' $(find ./ -type f -name "Makefile")
 
-      - name: 创建符号链接以修复中文支持
-        working-directory:  ${{ env.CMZJ_PACKAGE_ROOT_PATH }}
-        run: |
-          TMPDIR=$(mktemp -d) || exit 1
-          find . -name 'po' -type d > $TMPDIR/podir.list
-          total_rows=$(sed -n '$=' $TMPDIR/podir.list) #行数-文件夹个数
-          n=1
-          while [ "$n" -le $total_rows ]; do
-              DIR=$(sed -n "${n}p" $TMPDIR/podir.list)
-              if [ -h $DIR/zh_Hans ]; then
-                  echo "$DIR/zh_Hans 符号链接以存在无需修复"
-              elif [ -d $DIR/zh_Hans ]; then
-                  echo "$DIR/zh_Hans 目录已存在无需修复"
-              elif [ -e $DIR/zh_Hans ]; then
-                  echo "$DIR/zh_Hans 存在非符号链接文件删除后重新创建"
-                  rm -rf $DIR/zh_Hans||exit 1
-                  ln -s zh-cn $DIR/zh_Hans||exit 1
-              elif [ ! -d $DIR/zh-cn ]; then
-                  echo "$DIR/zh-cn 原汉化文件夹不存在，这可能是该luci插件原生为中文或不支持中文"
-              else
-                  echo "$DIR/zh_Hans 符号链接不存在创建符号链接"
-                  ln -s zh-cn $DIR/zh_Hans||exit 1
-              fi
-              n=$(( n+1 ))
-          done
-          [[ -d $TMPDIR ]] && rm -rf "$TMPDIR"
+     # - name: 创建符号链接以修复中文支持
+     #   working-directory:  ${{ env.CMZJ_PACKAGE_ROOT_PATH }}
+     #   run: |
+     #     TMPDIR=$(mktemp -d) || exit 1
+     #     find . -name 'po' -type d > $TMPDIR/podir.list
+     #     total_rows=$(sed -n '$=' $TMPDIR/podir.list) #行数-文件夹个数
+     #     n=1
+      #    while [ "$n" -le $total_rows ]; do
+     #         DIR=$(sed -n "${n}p" $TMPDIR/podir.list)
+     #         if [ -h $DIR/zh_Hans ]; then
+     #             echo "$DIR/zh_Hans 符号链接以存在无需修复"
+     #         elif [ -d $DIR/zh_Hans ]; then
+     #             echo "$DIR/zh_Hans 目录已存在无需修复"
+     #         elif [ -e $DIR/zh_Hans ]; then
+     #             echo "$DIR/zh_Hans 存在非符号链接文件删除后重新创建"
+     #             rm -rf $DIR/zh_Hans||exit 1
+     #             ln -s zh-cn $DIR/zh_Hans||exit 1
+     #         elif [ ! -d $DIR/zh-cn ]; then
+     #             echo "$DIR/zh-cn 原汉化文件夹不存在，这可能是该luci插件原生为中文或不支持中文"
+     #         else
+     #             echo "$DIR/zh_Hans 符号链接不存在创建符号链接"
+     #             ln -s zh-cn $DIR/zh_Hans||exit 1
+     #         fi
+     #         n=$(( n+1 ))
+     #     done
+     #     [[ -d $TMPDIR ]] && rm -rf "$TMPDIR"
 
       - name: 复制到cmzj_patch
         run: |
@@ -222,16 +223,16 @@ jobs:
 
       - name: 压缩
         run: |
-          cd $CMZJ_PACKAGE_ROOT_PATH
-          tar cvpzf $GITHUB_WORKSPACE/cmzj_package.tgz *
+          #cd $CMZJ_PACKAGE_ROOT_PATH
+          #tar cvpzf $GITHUB_WORKSPACE/cmzj_package.tgz *
           cd $CMZJ_PATCH_ROOT_PATH
           tar cvpzf $GITHUB_WORKSPACE/cmzj_patch.tgz *
 
-      - name: 上传 cmzj_package
-        uses: actions/upload-artifact@v3
-        with:
-          name: cmzj_package-${{ matrix.config }}
-          path: cmzj_package.tgz
+      #- name: 上传 cmzj_package
+      #  uses: actions/upload-artifact@v3
+      #  with:
+      #    name: cmzj_package-${{ matrix.config }}
+      #    path: cmzj_package.tgz
 
       - name: 上传 cmzj_patch
         uses: actions/upload-artifact@v3
@@ -269,19 +270,19 @@ jobs:
           mkdir -p workspace
           export WORKSPACE_ROOT_PATH="$(pwd)/workspace"
           echo "WORKSPACE_ROOT_PATH=$WORKSPACE_ROOT_PATH" >> $GITHUB_ENV
-          mkdir -p $WORKSPACE_ROOT_PATH/{cmzj_package,cmzj_patch,log}
-          export CMZJ_PACKAGE_ROOT_PATH="$WORKSPACE_ROOT_PATH/cmzj_package"
+       #   mkdir -p $WORKSPACE_ROOT_PATH/{cmzj_package,cmzj_patch,log}
+       #   export CMZJ_PACKAGE_ROOT_PATH="$WORKSPACE_ROOT_PATH/cmzj_package"
           export CMZJ_PATCH_ROOT_PATH="$WORKSPACE_ROOT_PATH/cmzj_patch"
           export LOG_PATH="$WORKSPACE_ROOT_PATH/log"
-          echo "CMZJ_PACKAGE_ROOT_PATH=$CMZJ_PACKAGE_ROOT_PATH" >> $GITHUB_ENV
+       #   echo "CMZJ_PACKAGE_ROOT_PATH=$CMZJ_PACKAGE_ROOT_PATH" >> $GITHUB_ENV
           echo "CMZJ_PATCH_ROOT_PATH=$CMZJ_PATCH_ROOT_PATH" >> $GITHUB_ENV
           echo "LOG_PATH=$LOG_PATH" >> $GITHUB_ENV
           cat $GITHUB_ENV >> $GITHUB_WORKSPACE/build1_ENV
 
-      - name: 下载cmzj_package
-        uses: actions/download-artifact@v3
-        with:
-          name: cmzj_package-${{ matrix.config }}
+     # - name: 下载cmzj_package
+     #   uses: actions/download-artifact@v3
+     #   with:
+     #     name: cmzj_package-${{ matrix.config }}
 
       - name: 下载cmzj_patch
         uses: actions/download-artifact@v3
@@ -290,14 +291,14 @@ jobs:
 
       - name: 解压
         run: |
-          tar xvpfz $GITHUB_WORKSPACE/cmzj_package.tgz -C $CMZJ_PACKAGE_ROOT_PATH
-          tar xvpfz $GITHUB_WORKSPACE/cmzj_patch.tgz -C $CMZJ_PATCH_ROOT_PATH
-          echo "cmzj_package" >> $LOG_PATH/cmzj_package.log
-          ls $CMZJ_PACKAGE_ROOT_PATH >> $LOG_PATH/cmzj_package.log
+       #   tar xvpfz $GITHUB_WORKSPACE/cmzj_package.tgz -C $CMZJ_PACKAGE_ROOT_PATH
+       #   tar xvpfz $GITHUB_WORKSPACE/cmzj_patch.tgz -C $CMZJ_PATCH_ROOT_PATH
+       #   echo "cmzj_package" >> $LOG_PATH/cmzj_package.log
+       #   ls $CMZJ_PACKAGE_ROOT_PATH >> $LOG_PATH/cmzj_package.log
           echo "cmzj_patch"  >> $LOG_PATH/cmzj_patch.log
           ls $CMZJ_PATCH_ROOT_PATH  >> $LOG_PATH/cmzj_patch.log
-          echo "cmzj_package-permissions" >> $LOG_PATH/cmzj_package.log
-          ls -l $CMZJ_PACKAGE_ROOT_PATH/** >> $LOG_PATH/cmzj_package.log
+      #    echo "cmzj_package-permissions" >> $LOG_PATH/cmzj_package.log
+      #    ls -l $CMZJ_PACKAGE_ROOT_PATH/** >> $LOG_PATH/cmzj_package.log
           echo "cmzj_patch-permissions" >> $LOG_PATH/cmzj_patch.log
           ls -l $CMZJ_PATCH_ROOT_PATH/**  >> $LOG_PATH/cmzj_patch.log
 
@@ -314,12 +315,12 @@ jobs:
         working-directory: ${{ env.OPENWRT_ROOT_PATH }}
         run: git checkout $(sed -n '/openwrt_tag\/branch/p' $GITHUB_WORKSPACE/config/${{ matrix.config }}/OpenWrt-K/compile.config | sed -e 's/.*=//')
 
-      - name: 复制cmzj_package
-        working-directory: ${{ env.WORKSPACE_ROOT_PATH }}
-        run: |
-          cp -r $CMZJ_PACKAGE_ROOT_PATH $OPENWRT_ROOT_PATH/package/cmzj_package
-          echo "cmzj_package" >> $LOG_PATH/cmzj_patch.log
-          ls $OPENWRT_ROOT_PATH/package/cmzj_package >> $LOG_PATH/cmzj_patch.log
+    #  - name: 复制cmzj_package
+    #    working-directory: ${{ env.WORKSPACE_ROOT_PATH }}
+    #    run: |
+    #      cp -r $CMZJ_PACKAGE_ROOT_PATH $OPENWRT_ROOT_PATH/package/cmzj_package
+    #      echo "cmzj_package" >> $LOG_PATH/cmzj_patch.log
+    #      ls $OPENWRT_ROOT_PATH/package/cmzj_package >> $LOG_PATH/cmzj_patch.log
 
       - name: 更新 feeds
         working-directory: ${{ env.OPENWRT_ROOT_PATH }}
@@ -789,8 +790,8 @@ jobs:
         working-directory: ${{ env.OPENWRT_ROOT_PATH }}
         run: |
           mkdir -p ./artifact/package
-          echo "artifact-/bin" >> $LOG_PATH/cmzj_package.log
-          ls -l ./bin/** >> $LOG_PATH/cmzj_package.log
+    #      echo "artifact-/bin" >> $LOG_PATH/cmzj_package.log
+    #      ls -l ./bin/** >> $LOG_PATH/cmzj_package.log
           cp -rf $(find ./bin/targets/ -type f -name "*.ipk") ./artifact/package/
           rm -rf $(find ./bin/targets/ -type d -name "packages")
           cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/
@@ -967,8 +968,8 @@ jobs:
         working-directory: ${{ env.OPENWRT_ROOT_PATH }}
         run: |
           mkdir -p ./artifact/{package,kmod,buildinfo}
-          echo "artifact-/bin" >> $LOG_PATH/cmzj_package.log
-          ls -l ./bin/** >> $LOG_PATH/cmzj_package.log
+     #     echo "artifact-/bin" >> $LOG_PATH/cmzj_package.log
+     #     ls -l ./bin/** >> $LOG_PATH/cmzj_package.log
           ls -l ./bin/targets/${{ matrix.target }}/${{ matrix.subtarget }}/** >> $LOG_PATH/Image_Builder-bin.log
           cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
           cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/
@@ -1112,7 +1113,7 @@ jobs:
         working-directory: ${{ env.IMAGE_BUILDER_ROOT_PATH }}
         run: |
           mkdir -p ./artifact/buildinfo
-          echo "artifact-/bin" >> $LOG_PATH/cmzj_package.log
+       #   echo "artifact-/bin" >> $LOG_PATH/cmzj_package.log
           ls -l ./bin/targets/${{ matrix.target }}/${{ matrix.subtarget }}/** >> $LOG_PATH/Image_Builder-bin.log
           cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
 
