@@ -223,8 +223,8 @@ jobs:
 
       - name: 压缩
         run: |
-          #cd $CMZJ_PACKAGE_ROOT_PATH
-          #tar cvpzf $GITHUB_WORKSPACE/cmzj_package.tgz *
+    #      cd $CMZJ_PACKAGE_ROOT_PATH
+    #      tar cvpzf $GITHUB_WORKSPACE/cmzj_package.tgz *
           cd $CMZJ_PATCH_ROOT_PATH
           tar cvpzf $GITHUB_WORKSPACE/cmzj_patch.tgz *
 
