@@ -87,7 +87,7 @@ jobs:
           EXT_PKGS_PREP_PATH=$TMPDIR/extpackages_prepare
           EXT_PKGS_DL_PATH=$DOWNLOAD_ROOT_PATH/extpackages/dl
           EXT_PKGS_PATH=$DOWNLOAD_ROOT_PATH/extpackages/extpackages
-          EXT_PKGS_CONFIG=$GITHUB_WORKSPACE/config/${{ matrix.config }}/OpenWrt-K/extpackages.config
+          #EXT_PKGS_CONFIG=$GITHUB_WORKSPACE/config/${{ matrix.config }}/OpenWrt-K/extpackages.config
           mkdir -p $EXT_PKGS_PREP_PATH $EXT_PKGS_PATH $EXT_PKGS_DL_PATH
           NUMBER_OF_PKGS=$(grep -c "^EXT_PACKAGES_NAME\[" $EXT_PKGS_CONFIG)
           n=1
